@@ -24,16 +24,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 from data import data_factory
 from networks import model_factory
+import argparse
 
 #####-----------structure parameters-----------------
 INPUT_SIZE = 8192
 
 ####-----------------------------------------------------------------------
-os.chdir('/home/ad/code/lab/python/FDCNN_tensorflow/')
-cwd = os.getcwd()
-data_dir = '/home1/TestDataFromWen/arranged/steady_condition/pkl/' # ubuntu
-model_path = os.path.join(cwd, 'checkpoint/shallcnn/2018-06-06_231243/model.ckpt')
-model_path1 = os.path.join(cwd, 'checkpoint/cvgg19/2018-06-07_230020/model.ckpt')
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_dir", type=str, default='/home1/TestDataFromWen/arranged/steady_condition/pkl/')
+    parser.add_argument("--model_path", type=str, default='checkpoint/shallcnn/2018-06-06_231243/model.ckpt')
+    parser.add_argument("--cwd", type=str, default='/home/ad/code/lab/python/FDCNN_tensorflow/')
+    args = parser.parse_args()
+    return args
+
+args = get_args()
+os.chdir(args.cwd)
+data_dir = args.data_dir # ubuntu
+model_path = os.path.join(args.cwd, args.model_path)
 ####-----------------------------------------------------------------------
 #reader = pywrap_tensorflow.NewCheckpointReader(model_path)
 #var_to_shape_map = reader.get_variable_to_shape_map()
