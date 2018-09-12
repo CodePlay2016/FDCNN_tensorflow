@@ -23,7 +23,7 @@ args = get_args()
 os.chdir(args.cwd)
 
 ####------------------------------------------------------------------------
-sys.path.append('args.cwd')
+sys.path.append(args.cwd)
 import tensorflow as tf
 from sklearn.manifold import TSNE
 import numpy as np
