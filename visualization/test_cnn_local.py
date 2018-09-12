@@ -24,6 +24,7 @@ os.chdir(args.cwd)
 
 ####------------------------------------------------------------------------
 sys.path.append('../')
+print(sys.path)
 import tensorflow as tf
 from sklearn.manifold import TSNE
 import numpy as np
