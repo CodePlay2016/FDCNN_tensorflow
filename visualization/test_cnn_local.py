@@ -16,7 +16,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default='/home1/TestDataFromWen/arranged/steady_condition/pkl/')
     parser.add_argument("--model_path", type=str, default='checkpoint/shallcnn/2018-06-06_231243/model.ckpt')
-    parser.add_argument("--cwd", type=str, default='/home/ad/code/lab/python/FDCNN_tensorflow/')
+    parser.add_argument("--cwd", type=str, default='/home/ad/code/FDCNN_tensorflow/')
     args = parser.parse_args()
     return args
 args = get_args()
