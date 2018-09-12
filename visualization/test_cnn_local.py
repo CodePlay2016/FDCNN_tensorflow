@@ -5,18 +5,24 @@ Created on Sun Sep 10 10:31:06 2017
 
 @author: codeplay2017
 """
-#from __future__ import absolute_import
-#from __future__ import division
-#from __future__ import print_function
-#from __future__ import unicode_literals
-#
-#from builtins import str
-## etc., as needed
-#
-#from future import standard_library
-#standard_library.install_aliases()
 
+
+#####-----------structure parameters-----------------
+INPUT_SIZE = 8192
+
+####-----------------------------------------------------------------------
 import time, os, sys, pickle
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_dir", type=str, default='/home1/TestDataFromWen/arranged/steady_condition/pkl/')
+    parser.add_argument("--model_path", type=str, default='checkpoint/shallcnn/2018-06-06_231243/model.ckpt')
+    parser.add_argument("--cwd", type=str, default='/home/ad/code/lab/python/FDCNN_tensorflow/')
+    args = parser.parse_args()
+    return args
+args = get_args()
+os.chdir(args.cwd)
+
+####------------------------------------------------------------------------
 sys.path.append('../')
 import tensorflow as tf
 from sklearn.manifold import TSNE
@@ -26,20 +32,6 @@ from data import data_factory
 from networks import model_factory
 import argparse
 
-#####-----------structure parameters-----------------
-INPUT_SIZE = 8192
-
-####-----------------------------------------------------------------------
-def get_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", type=str, default='/home1/TestDataFromWen/arranged/steady_condition/pkl/')
-    parser.add_argument("--model_path", type=str, default='checkpoint/shallcnn/2018-06-06_231243/model.ckpt')
-    parser.add_argument("--cwd", type=str, default='/home/ad/code/lab/python/FDCNN_tensorflow/')
-    args = parser.parse_args()
-    return args
-
-args = get_args()
-os.chdir(args.cwd)
 data_dir = args.data_dir # ubuntu
 model_path = os.path.join(args.cwd, args.model_path)
 ####-----------------------------------------------------------------------
