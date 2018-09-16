@@ -8,10 +8,8 @@ def res_block(inpt, out_channel, name_scope):
         out = tu.add_conv1d_layer(inpt, out_channel, 3, 1, BN=False, layer_name='conv1')
         out = tu.add_conv1d_layer(out, out_channel,3, 1, BN=False, layer_name='conv2')
         out = inpt + out
-
         
 def resnet(inpt, inpt_size, is_training):
-    
     end_points = {}
     keep_prob = tf.cond(is_training, lambda: tf.constant(0.5), lambda: tf.constant(1.0))
     with tf.name_scope('reshape'):
@@ -75,10 +73,6 @@ def resnet(inpt, inpt_size, is_training):
         out = tu.add_fc_layer(out, 256, relu=True, BN=True, 
                                 is_training=is_training)
         out = tf.nn.dropout(out, keep_prob)
-#    with tf.name_scope('fc1'):
-#        out = tu.add_fc_layer(out, 256, relu=True, BN=True, is_training=is_training)
-#    with tf.name_scope('dropout1'):
-#        out = tf.nn.dropout(out, keep_prob)
     with tf.name_scope('fc4'):
         out = tu.add_fc_layer(out, 3)
         

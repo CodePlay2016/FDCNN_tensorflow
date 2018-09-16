@@ -2,9 +2,7 @@
 import tensorflow as tf
 import networks.tf_utils as tu
 
-def cvgg19(inpt, inpt_size,
-                is_training):
-    
+def cvgg19(inpt, inpt_size, is_training):
     end_points = {}
     keep_prob = tf.cond(is_training, lambda: tf.constant(0.5), lambda: tf.constant(1.0))
     with tf.name_scope('reshape'):
@@ -86,6 +84,7 @@ def cvgg19(inpt, inpt_size,
     end_points['class_end'] = out
     end_points['speed_end'] = out2
     return end_points
+    
 
 def cvgg19_2(inpt, inpt_size,
                 is_training):

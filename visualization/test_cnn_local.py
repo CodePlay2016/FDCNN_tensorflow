@@ -11,7 +11,7 @@ Created on Sun Sep 10 10:31:06 2017
 INPUT_SIZE = 8192
 
 ####-----------------------------------------------------------------------
-import time, os, sys, pickle, argparse
+import time, os, sys, pickle, argparse, pdb
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default='/home1/TestDataFromWen/arranged/steady_condition/pkl/')
