@@ -34,13 +34,13 @@ from networks import model_factory
 data_dir = args.data_dir # ubuntu
 model_path = os.path.join(args.cwd, args.model_path)
 ####-----------------------------------------------------------------------
-#reader = pywrap_tensorflow.NewCheckpointReader(model_path)
-#var_to_shape_map = reader.get_variable_to_shape_map()
-## Print tensor name and values
-#keylist = []
-#for key in var_to_shape_map:
-#    keylist.append(key)
-#list.sort(keylist)
+reader = tf.pywrap_tensorflow.NewCheckpointReader(model_path)
+var_to_shape_map = reader.get_variable_to_shape_map()
+# Print tensor name and values
+keylist = []
+for key in var_to_shape_map:
+   keylist.append(key)
+list.sort(keylist)
 ####-----------------------------------------------------------------------
 ####-----------------------------------------------------------------------
 
