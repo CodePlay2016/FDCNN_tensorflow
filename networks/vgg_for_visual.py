@@ -78,7 +78,7 @@ def cvgg19_with_pindex(inpt, inpt_size, is_training):
         
     with tf.name_scope('block8'):
         print(end_points.keys())
-        out2 = tu.add_fc_layer(end_points['pool4_arg'], 256, relu=True, BN=True,
+        out2 = tu.add_fc_layer(end_points['pool4'], 256, relu=True, BN=True,
                                         is_training=is_training)
         out2 = tf.nn.dropout(out2, keep_prob)
     with tf.name_scope('block9'):
