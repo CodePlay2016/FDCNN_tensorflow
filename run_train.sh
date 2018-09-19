@@ -1,4 +1,4 @@
-python train_net_pai.py --checkpointDir=/home/ad/code/FDCNN_tensorflow/checkpoint/ \
+python train_net_pai.py --checkpointDir=/home/ad/code/FDCNN_tensorflow/checkpoint/dvgg19/ \
 --buckets=/home1/data/TestDataFromWen/arranged/steady_condition/pkl/ \
 --input_size=8192 \
 --train_split=0.8 \
@@ -8,7 +8,7 @@ python train_net_pai.py --checkpointDir=/home/ad/code/FDCNN_tensorflow/checkpoin
 --do_fft=false \
 --do_norm=false \
 --use_speed=true \
---network=cvgg19 \
+--network=cvgg19v \
 --num_epoch=20000 \
 --batch_size=64 \
 --learning_rate=0.0001 \

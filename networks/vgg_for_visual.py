@@ -98,5 +98,9 @@ def de_cvgg19(end_points, weight_dict):
 
         un_out = tf.nn.conv2d_transpose(un_out,weight_dict['conv2'],
         output_shape=[], strides=1, name='de_conv1')
+        end_points['de_conv1'] = un_out
+
+        un_out = tf.nn.conv2d_transpose(un_out, weight_dict['conv1'],
+        output_shape=[], strides=2, name='de_conv2')
 
 
