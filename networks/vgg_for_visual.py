@@ -88,6 +88,15 @@ def cvgg19_with_pindex(inpt, inpt_size, is_training):
     end_points['speed_end'] = out2
     return end_points
 
-def de_cvgg19(feature, weight_dict):
-    pass
+def de_cvgg19(end_points, weight_dict):
+    with tf.name_scope('de_block1'):
+        inpt = end_points['pool1']
+        pool_args = end_points['pool1_args']
+        
+        un_out = tu.un_max_pool(inpt, pool_args, 4, 'un_pool1')
+        end_points['un_pool1'] = un_out
+
+        un_out = tf.nn.conv2d_transpose(un_out,weight_dict['conv2'],
+        output_shape=[], strides=1, name='de_conv1')
+
 

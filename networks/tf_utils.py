@@ -85,7 +85,7 @@ def max_pool_with_argmax(net, ksize, stride=2,layer_name=None):
         net = tf.nn.max_pool(net, ksize=[1, stride, stride, 1],strides=[1, stride, stride, 1], padding='SAME') 
     return net,mask
 
-def un_max_pool(net,mask,stride,layer_name):
+def un_max_pool(net,mask,ksize,layer_name):
     '''
     https://www.cnblogs.com/zyly/p/8991412.html
     定义一个反最大池化的函数，找到mask最大的索引，将max的值填到指定位置
@@ -94,7 +94,7 @@ def un_max_pool(net,mask,stride,layer_name):
         mask：位置索引组数组，形状和net一样
         stride:步长，是一个int32类型，这里就是max_pool_with_argmax传入的stride参数
     '''
-    ksize = [1, stride, 1, 1]
+    ksize = [1, ksize, 1, 1]
     input_shape = net.get_shape().as_list()
     #  calculation new shape
     output_shape = (input_shape[0], input_shape[1] * ksize[1], input_shape[2] * ksize[2], input_shape[3])
