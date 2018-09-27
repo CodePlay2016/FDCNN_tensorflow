@@ -31,17 +31,17 @@ def sphere_net20(inpt, inpt_size, is_training):
     end_points['block3']=out
     tu.print_activations(out) 
     
-    ## third res-----------------------------
-    num_feature *= 2
-    out = res_block(out, num_feature, name_scope='block4', down_sample=True)
-    end_points['block4']=out
-    out = res_block(out, num_feature, name_scope='block5', down_sample=False)
-    end_points['block5']=out
-    out = res_block(out, num_feature, name_scope='block6', down_sample=False)
-    end_points['block6']=out
-    out = res_block(out, num_feature, name_scope='block7', down_sample=False)
-    end_points['block7']=out
-    tu.print_activations(out)
+    # ## third res-----------------------------
+    # num_feature *= 2
+    # out = res_block(out, num_feature, name_scope='block4', down_sample=True)
+    # end_points['block4']=out
+    # out = res_block(out, num_feature, name_scope='block5', down_sample=False)
+    # end_points['block5']=out
+    # out = res_block(out, num_feature, name_scope='block6', down_sample=False)
+    # end_points['block6']=out
+    # out = res_block(out, num_feature, name_scope='block7', down_sample=False)
+    # end_points['block7']=out
+    # tu.print_activations(out)
     
     ## forth conv-----------------------------
     num_feature *= 2
