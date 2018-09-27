@@ -51,7 +51,7 @@ def sphere_net20(inpt, inpt_size, is_training):
     
     ## fully connected layers----------------------------- 
     with tf.name_scope('fc1_1'):   
-        out = tu.add_fc_layer(out, 256, relu=True, BN=True, 
+        out = tu.add_fc_layer(out, 1024, relu=True, BN=False, 
                                 is_training=is_training)
         out = tf.nn.dropout(out, keep_prob)
     with tf.name_scope('fc1_2'):
