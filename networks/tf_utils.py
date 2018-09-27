@@ -34,6 +34,14 @@ def add_conv1d_layer(inpt, num_features, kernel_size, stride=1,
             print_activations(out)
     return out
 
+def add_deconv1d(inpt, kernel, stride, layer_name=None):
+    kernel_shape = kernel.get_shape().as_list()
+    inpt_shape = inpt.get_shape().as_list()
+    with tf.name_scope(layer_name):
+        tf.nn.conv2d_transpose(inpt,kernel,
+            output_shape=[], strides=1, name='de_conv1')
+
+
 def add_fc_layer(inpt, out_size,is_training=True, relu=False, BN=False):
     inpt_shape = inpt.get_shape().as_list()
     if len(inpt_shape) == 4:

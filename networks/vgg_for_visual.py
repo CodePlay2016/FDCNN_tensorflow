@@ -11,7 +11,7 @@ def cvgg19_with_pindex(inpt, inpt_size, is_training):
 
     ## first conv-----------------------------
     with tf.name_scope('block1'):
-        num_feature = 16
+        num_feature = 32
         out = tu.add_conv1d_layer(x_image, num_feature, 9, 2, BN=False, 
                                 layer_name='conv1')
         end_points['conv1']=out

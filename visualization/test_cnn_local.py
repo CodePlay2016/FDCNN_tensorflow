@@ -44,7 +44,7 @@ list.sort(keylist)
 ####-----------------------------------------------------------------------
 ####-----------------------------------------------------------------------
 
-def main(): # _ means the last param
+def main():
     # Create the model
     Model = model_factory.get_model('cnn')
     model = Model('cvgg19', INPUT_SIZE,3)
