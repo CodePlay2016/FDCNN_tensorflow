@@ -6,8 +6,8 @@ conv = tu.add_conv1d_layer
 def res_block(inpt, out_channel, name_scope=None,down_sample=False):
     with tf.name_scope(name_scope):
         if down_sample:
-            inpt = tu.add_conv1d_layer(inpt, out_channel, 3, 2, BN=True, layer_name='conv0')
-        out = tu.add_conv1d_layer(inpt, out_channel, 3, 1, BN=True, layer_name='conv1')
+            inpt = tu.add_conv1d_layer(inpt, out_channel, 3, 2, BN=False, layer_name='conv0')
+        out = tu.add_conv1d_layer(inpt, out_channel//2, 3, 1, BN=False, layer_name='conv1')
         out = tu.add_conv1d_layer(out, out_channel,3, 1, BN=True, layer_name='conv2')
     return inpt + out
         
