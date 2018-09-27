@@ -11,6 +11,7 @@ import networks.simpnets as simpnets
 import networks.speednets as speednets
 import networks.shallow_cnn as shallownets
 import networks.vgg_for_visual as vgg4vis
+import networks.resnet as resnet
 
 networks_map = {'cvgg19': vgg.cvgg19,
                 'cvgg19_2': vgg.cvgg19_2,
@@ -19,6 +20,8 @@ networks_map = {'cvgg19': vgg.cvgg19,
 
                 'cvgg19v': vgg4vis.cvgg19_with_pindex,
                 'dvgg19v': vgg4vis.de_cvgg19,
+
+                'sphere20': resnet.sphere_net20,
                 
                 'simpnet1': simpnets.simpnet1,
                 'simpnet2': simpnets.simpnet2,
