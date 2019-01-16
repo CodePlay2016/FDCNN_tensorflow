@@ -47,11 +47,11 @@ def final_block(inpt,num_class, is_training):
     return end_points
 
 def cardinet(inpt,_,is_training):
-    num_features = 32
+    num_features = 64
     kernel_size = 16
-    num_build_blocks = 8
-    feature_increase_each_n_block = 2
-    print('input shape',inpt.get_shape().as_list())
+    num_build_blocks = 15
+    feature_increase_each_n_block = 4
+    
     inpt = tf.expand_dims(inpt,-1)
 
     out = first_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.8)
