@@ -22,6 +22,7 @@ def first_block(inpt, num_features,kernel_size,is_training,dropout_rate=0.8):
     return out
 
 def build_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.5):
+    pre_num_features = inpt.get_shape().as_list()[-1]
     out = tf.layers.batch_normalization(inpt, training=is_training)
     out = tf.nn.relu(out)
     out = tf.layers.dropout(out,dropout_rate)
@@ -30,6 +31,8 @@ def build_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.5):
     out = tf.nn.relu(out)
     out = tf.layers.dropout(out,dropout_rate)
     out = tf.layers.conv1d(out,num_features,kernel_size,strides=2,padding='SAME')
+    if not num_features == pre_num_features:
+        inpt = tf.layers.conv1d(inpt,num_features,1)
     inpt = tf.layers.max_pooling1d(inpt,kernel_size,2,'SAME')
     out = out + inpt
     return out
@@ -43,14 +46,13 @@ def final_block(inpt,num_class, is_training):
     end_points = {'class_end':out1,'speed_end': out2}
     return end_points
 
-def cardinet(inpt,inpt_size,is_training):
+def cardinet(inpt,_,is_training):
     num_features = 32
     kernel_size = 16
     num_build_blocks = 8
     feature_increase_each_n_block = 2
     print('input shape',inpt.get_shape().as_list())
-    # inpt = tf.expand_dims(tf.expand_dims(inpt,-1),-1)
-    inpt = tf.reshape(inpt, [-1, inpt_size, 1])
+    inpt = tf.expand_dims(inpt,-1)
 
     out = first_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.8)
 
