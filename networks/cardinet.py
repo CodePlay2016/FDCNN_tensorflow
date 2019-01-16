@@ -48,9 +48,9 @@ def cardinet(inpt,inpt_size,is_training):
     kernel_size = 16
     num_build_blocks = 8
     feature_increase_each_n_block = 2
-
+    print('input shape',inpt.get_shape().as_list())
     # inpt = tf.expand_dims(tf.expand_dims(inpt,-1),-1)
-    inpt = tf.reshape(inpt, [-1, inpt_size,1, 1])
+    inpt = tf.reshape(inpt, [-1, inpt_size, 1])
 
     out = first_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.8)
 
