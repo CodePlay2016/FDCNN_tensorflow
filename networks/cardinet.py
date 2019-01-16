@@ -43,13 +43,14 @@ def final_block(inpt,num_class, is_training):
     end_points = {'class_end':out1,'speed_end': out2}
     return end_points
 
-def cardinet(inpt,is_training):
+def cardinet(inpt,inpt_size,is_training):
     num_features = 32
     kernel_size = 16
     num_build_blocks = 8
     feature_increase_each_n_block = 2
 
-    inpt = tf.expand_dims(tf.expand_dims(inpt,-1),-1)
+    # inpt = tf.expand_dims(tf.expand_dims(inpt,-1),-1)
+    inpt = tf.reshape(inpt, [-1, inpt_size,1, 1])
 
     out = first_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.8)
 

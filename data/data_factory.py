@@ -16,10 +16,11 @@ from __future__ import unicode_literals
 #os.chdir('/media/codeplay2018/545A30205A2FFD74/code/lab/python/FDCNN_tensorflow/')
 #import tensorflow as tf
 from data import wen_data
-#tf.app.flags.DEFINE_string(
-#    'buckets', '/media/codeplay2018/545A30205A2FFD74/code/lab/data/TestDataFromWen/arranged/steady_condition/pkl/',
-#    'dataset directory for aliyun setting')
-#FLAGS = tf.app.flags.FLAGS
+import tensorflow as tf
+tf.app.flags.DEFINE_string(
+   'buckets', '/home1/data/TestDataFromWen/arranged/steady_condition/pkl/',
+   'dataset directory for aliyun setting')
+FLAGS = tf.app.flags.FLAGS
 
 dataset_map = {'wen': wen_data.get_dataset,
                 }
