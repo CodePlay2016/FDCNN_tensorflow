@@ -7,7 +7,8 @@ import tensorflow as tf
 import networks.tf_utils as tu
 
 def first_block(inpt, num_features,kernel_size,is_training,dropout_rate=0.8):
-    dropout_rate = tf.cond(is_training, lambda: tf.constant(dropout_rate), lambda: tf.constant(1.0))
+    a, b = tf.constant(dropout_rate,dtype=tf.float32), tf.constant(1.0,dtype=tf.float32)
+    dropout_rate = tf.cond(is_training, lambda: a, lambda: b)
     out = tf.layers.conv1d(inpt,num_features,kernel_size,padding='SAME')
     out = tf.layers.batch_normalization(out, training=is_training)
     out1 = tf.nn.relu(out)
@@ -23,7 +24,8 @@ def first_block(inpt, num_features,kernel_size,is_training,dropout_rate=0.8):
     return out
 
 def build_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.5):
-    dropout_rate = tf.cond(is_training, lambda: tf.constant(dropout_rate), lambda: tf.constant(1.0))
+    a, b = tf.constant(dropout_rate,dtype=tf.float32), tf.constant(1.0,dtype=tf.float32)
+    dropout_rate = tf.cond(is_training, lambda: a, lambda: b)
     pre_num_features = inpt.get_shape().as_list()[-1]
     out = tf.layers.batch_normalization(inpt, training=is_training)
     out = tf.nn.relu(out)
