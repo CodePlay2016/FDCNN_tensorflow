@@ -38,7 +38,7 @@ def build_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.5):
     return out
 
 def final_block(inpt,num_class, is_training):
-    out = tf.layers.batch_normalization(inpt, is_training)
+    out = tf.layers.batch_normalization(inpt, training=is_training)
     out = tf.nn.relu(out)
     out = tf.layers.flatten(out)
     out1 = tf.layers.dense(out, num_class)
