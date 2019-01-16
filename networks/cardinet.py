@@ -15,7 +15,7 @@ def first_block(inpt, num_features,kernel_size,is_training,dropout_rate=0.8):
     out = tf.layers.batch_normalization(out, training=is_training)
     out = tf.nn.relu(out)
     out = tf.layers.dropout(out,rate=dropout_rate)
-    out = tf.layers.conv1d(out,num_features,kernel_size,stride=2,padding='SAME')
+    out = tf.layers.conv1d(out,num_features,kernel_size,strides=2,padding='SAME')
 
     out1 = tf.layers.max_pooling1d(out1,kernel_size,2,'SAME')
     out = out + out1
@@ -29,7 +29,7 @@ def build_block(inpt, num_features, kernel_size, is_training, dropout_rate=0.5):
     out = tf.layers.batch_normalization(out, training=is_training)
     out = tf.nn.relu(out)
     out = tf.layers.dropout(out,dropout_rate)
-    out = tf.layers.conv1d(out,num_features,kernel_size,stride=2,padding='SAME')
+    out = tf.layers.conv1d(out,num_features,kernel_size,strides=2,padding='SAME')
     inpt = tf.layers.max_pooling1d(inpt,kernel_size,2,'SAME')
     out = out + inpt
     return out
