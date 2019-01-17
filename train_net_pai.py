@@ -177,21 +177,23 @@ def main(_): # _ means the last param
                 loss_feed = train_eval_feed
             else:
                 loss_feed = adavalid_feed
-            loss_this,acc_this = sess.run([model.cross_entropy_loss,model.accuracy],feed_dict=loss_feed)
-            valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
+            
             # if FLAGS.stop_standard == 'adatest':
             #     acc_this = acc_this*0.2 + valid_accuracy * 0.8 
             # update the highest performance checkpoint
-            if valid_accuracy - 0.98 >= 0.005 and acc_this > high_perform:
-                high_perform = acc_this
-                high_index   = i
-                saver.save(sess=sess, save_path=model_path)
+
+            # if valid_accuracy - 0.98 >= 0.005 and acc_this > high_perform:
+            #     high_perform = acc_this
+            #     high_index   = i
+            #     saver.save(sess=sess, save_path=model_path)
 
             if i and i % 100 == 0: # and show
                 train_accuracy, train_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=train_eval_feed)
                 adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=adavalid_feed)
+                loss_this,acc_this = sess.run([model.cross_entropy_loss,model.accuracy],feed_dict=loss_feed)
+                valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
                 
                 train_summary = sess.run(merged_summary, feed_dict=train_eval_feed)
                 valid_summary = sess.run(merged_summary, feed_dict=valid_feed)
