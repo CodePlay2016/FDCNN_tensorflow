@@ -57,7 +57,7 @@ def cardinet(inpt,_,is_training):
     kernel_size = 16
     num_build_blocks = 15
     feature_increase_each_n_block = 4
-    downsample_each_n_block = 2
+    downsample_each_n_block = 1
     
     inpt = tf.expand_dims(inpt,-1)
 
