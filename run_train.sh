@@ -1,4 +1,4 @@
-python train_net_pai.py --checkpointDir=/home/ad/code/FDCNN_tensorflow/checkpoint/resnet/ \
+python train_net_pai.py --checkpointDir=/home/ad/code/FDCNN_tensorflow/checkpoint/cardinet/ \
 --buckets=/home1/data/TestDataFromWen/arranged/steady_condition/pkl/ \
 --input_size=8192 \
 --train_split=0.8 \

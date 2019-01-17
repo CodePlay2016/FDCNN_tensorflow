@@ -213,6 +213,9 @@ def main(_): # _ means the last param
                 curve_list[2].append(high_perform)
                 curve_list[3].append(adatest_accuracy)
                 print(msg)
+            if i and i % 1000 == 0:
+                saver.save(sess=sess, save_path=model_path)
+                print('[INFO] model regularly saved...')
             
             if FLAGS.early_stop and\
             valid_accuracy - 0.98 >= 0.005:
