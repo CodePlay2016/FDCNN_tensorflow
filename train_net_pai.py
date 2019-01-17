@@ -102,7 +102,7 @@ def main(_): # _ means the last param
                   use_speed=FLAGS.use_speed,
                   speed_loss_factor=FLAGS.speed_loss_factor,
                   learning_rate=FLAGS.learning_rate)
-    logging.info('use speed:' + str(model.use_speed)
+    logging.info('use speed:' + str(model.use_speed))
     logging.info(model.speed_loss)
     logging.info('using model: '+FLAGS.network)
     
