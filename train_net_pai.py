@@ -209,6 +209,7 @@ def main(_): # _ means the last param
                     msg += ' train sploss %.2g / ada sploss %.2g'% (train_speed_loss, adatest_speed_loss)
                 start_time = time.time()
                 logging.info(msg)
+                print(msg)
         
                 curve_list[0].append(train_accuracy)
                 curve_list[1].append(valid_accuracy)
