@@ -94,7 +94,7 @@ def main(_): # _ means the last param
     print('training domain: ', train_speed)
     print('adaptive domain: ', test_speed)
   
-    print("[INFO] constructing graph..")
+    logging.info("constructing graph..")
   # Create the model
     Model = model_factory.get_model(FLAGS.model_name)
     model = Model(FLAGS.network, FLAGS.input_size,
@@ -102,12 +102,12 @@ def main(_): # _ means the last param
                   use_speed=FLAGS.use_speed,
                   speed_loss_factor=FLAGS.speed_loss_factor,
                   learning_rate=FLAGS.learning_rate)
-    print(model.use_speed)
-    print(model.speed_loss)
-    print('using model: ', FLAGS.network)
+    logging.info('use speed:' + str(model.use_speed)
+    logging.info(model.speed_loss)
+    logging.info('using model: '+FLAGS.network)
     
     # Import data
-    print('[INFO] importing data...')
+    logging.info('importing data...')
     data_fn = data_factory.get_data_from(FLAGS.dataset)
     trainset, validset, testset = data_fn(FLAGS.data_dir,
                                          speed_list=train_speed,
@@ -128,7 +128,7 @@ def main(_): # _ means the last param
                                          normalize=False,
                                          verbose=False, use_speed=FLAGS.use_speed)
     # adatestset.join_data(adatestset2)
-    print('adavalidset and adatestset %d, %d'%(adavalidset.num_examples(),
+    logging.info('adavalidset and adatestset %d, %d'%(adavalidset.num_examples(),
                                                adatestset.num_examples()))
     
     
@@ -144,7 +144,7 @@ def main(_): # _ means the last param
         tf.summary.scalar('sparsity/' + end_point,
                                         tf.nn.zero_fraction(x))
     merged_summary = tf.summary.merge_all()
-    logging.basicConfig(filename='log.log',filemode='a',format='%(asctime)s %(levelname)s %(message)s',
+    logging.basicConfig(filename=log_path,filemode='a',format='%(asctime)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S', level=logging.DEBUG)
 
     with tf.Session() as sess:
@@ -214,10 +214,9 @@ def main(_): # _ means the last param
                 curve_list[1].append(valid_accuracy)
                 curve_list[2].append(high_perform)
                 curve_list[3].append(adatest_accuracy)
-                print(msg)
             if i and i % 1000 == 0:
                 saver.save(sess=sess, save_path=model_path)
-                print('[INFO] model regularly saved...')
+                logging.info('model regularly saved...')
             
             if FLAGS.early_stop and\
             valid_accuracy - 0.98 >= 0.005:
