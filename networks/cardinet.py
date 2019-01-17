@@ -69,7 +69,7 @@ def cardinet(inpt,_,is_training):
         if ii % downsample_each_n_block == 0:
             downsample = True
         else: downsample = False
-        out = build_block(out, num_features, kernel_size, downsample, is_training, dropout_rate=0.7)
+        out = build_block(out, num_features, kernel_size, downsample, is_training, dropout_rate=1)
     
     out = final_block(out, 3, is_training)
 
