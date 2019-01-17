@@ -15,8 +15,7 @@ from __future__ import unicode_literals
 #
 ##from future import standard_library
 #standard_library.install_aliases()
-import pickle, time, os, shutil
-# os.chdir('/media/codeplay2018/545A30205A2FFD74/code/lab/python/FDCNN_tensorflow/')
+import pickle, time, os, shutil, logging
 import tensorflow as tf
 import numpy as np
 from data import data_factory
@@ -88,7 +87,6 @@ tf.app.flags.DEFINE_float('bn_momentum', 0.9, 'define the momentum param in BN')
 
 FLAGS = tf.app.flags.FLAGS
 
-
 #%%      
 def main(_): # _ means the last param
     train_speed = list(map(int, FLAGS.train_speed_list.split(',')))
@@ -136,15 +134,18 @@ def main(_): # _ means the last param
     
     # preparing the working directory, summaries
     time_info = time.strftime('%Y-%m-%d_%H%M%S',time.localtime(time.time()))
-    print(time_info)
+
     output_dir = FLAGS.checkpointDir + time_info + '/'
     model_path = os.path.join(output_dir, 'model.ckpt')
+    log_path   = os.path.join(output_dir, 'train.log')
     summary_path = os.path.join(output_dir, 'summary/')
     for end_point, x in model.end_points.items():
         tf.summary.histogram('activations/' + end_point, x)
         tf.summary.scalar('sparsity/' + end_point,
                                         tf.nn.zero_fraction(x))
     merged_summary = tf.summary.merge_all()
+    logging.basicConfig(filename='log.log',filemode='a',format='%(asctime)s %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S', level=logging.DEBUG)
 
     with tf.Session() as sess:
         train_summary_writer = tf.summary.FileWriter(summary_path+'train/',
@@ -200,13 +201,14 @@ def main(_): # _ means the last param
                 train_summary_writer.add_summary(train_summary, i)
                 valid_summary_writer.add_summary(valid_summary, i)
        
-                msg = ('[INFO]step |%d|, train acc |%.2g|, valid |%.3g|,'+
+                msg = ('step |%d|, train acc |%.2g|, valid |%.3g|,'+
                        'highest is |%.4g|, test |%.3g|.') % (
                         i, train_accuracy, valid_accuracy, high_perform, adatest_accuracy)
                 msg += ' time cost %.2g s'% (time.time()-start_time)
                 if FLAGS.speed_loss_factor:
                     msg += ' train sploss %.2g / ada sploss %.2g'% (train_speed_loss, adatest_speed_loss)
                 start_time = time.time()
+                logging.info(msg)
         
                 curve_list[0].append(train_accuracy)
                 curve_list[1].append(valid_accuracy)
