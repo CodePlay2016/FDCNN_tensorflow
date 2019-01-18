@@ -89,10 +89,18 @@ FLAGS = tf.app.flags.FLAGS
 
 #%%      
 def main(_): # _ means the last param
+    time_info = time.strftime('%Y-%m-%d_%H%M%S',time.localtime(time.time()))
+    os.mkdir('./log/'+time_info)
+    log_path   = os.path.join('./log/'+time_info, 'train.log')
+    logging.basicConfig(filename=log_path,filemode='a',format='%(asctime)s %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S', level=logging.DEBUG)
+    logging.getLogger().addHandler(logging.StreamHandler())# log both to console and file
+    logging.info('logging to file: '+log_path)
+
     train_speed = list(map(int, FLAGS.train_speed_list.split(',')))
     test_speed = list(map(int, FLAGS.test_speed_list.split(',')))
-    print('training domain: ', train_speed)
-    print('adaptive domain: ', test_speed)
+    logging.info('training domain: '+str(train_speed))
+    logging.info('adaptive domain: '+str(test_speed))
   
     logging.info("constructing graph..")
   # Create the model
@@ -133,19 +141,15 @@ def main(_): # _ means the last param
     
     
     # preparing the working directory, summaries
-    time_info = time.strftime('%Y-%m-%d_%H%M%S',time.localtime(time.time()))
-
     output_dir = FLAGS.checkpointDir + time_info + '/'
     model_path = os.path.join(output_dir, 'model.ckpt')
-    log_path   = os.path.join(output_dir, 'train.log')
     summary_path = os.path.join(output_dir, 'summary/')
     for end_point, x in model.end_points.items():
         tf.summary.histogram('activations/' + end_point, x)
         tf.summary.scalar('sparsity/' + end_point,
                                         tf.nn.zero_fraction(x))
     merged_summary = tf.summary.merge_all()
-    logging.basicConfig(filename=log_path,filemode='a',format='%(asctime)s %(levelname)s %(message)s',
-                        datefmt='%H:%M:%S', level=logging.DEBUG)
+    
 
     with tf.Session() as sess:
         train_summary_writer = tf.summary.FileWriter(summary_path+'train/',
@@ -209,7 +213,6 @@ def main(_): # _ means the last param
                     msg += ' train sploss %.2g / ada sploss %.2g'% (train_speed_loss, adatest_speed_loss)
                 start_time = time.time()
                 logging.info(msg)
-                print(msg)
         
                 curve_list[0].append(train_accuracy)
                 curve_list[1].append(valid_accuracy)
@@ -218,6 +221,8 @@ def main(_): # _ means the last param
             if i and i % 1000 == 0:
                 saver.save(sess=sess, save_path=model_path)
                 logging.info('model regularly saved...')
+                with tf.gfile.GFile(output_dir+'curvelist.pkl', 'wb') as f:
+                    pickle.dump(curve_list, f)
             
             if FLAGS.early_stop and\
             valid_accuracy - 0.98 >= 0.005:
@@ -225,12 +230,12 @@ def main(_): # _ means the last param
                     loss_this >= FLAGS.loss_threshold):
                     model.train_step.run(feed_dict=train_train_feed)
                 elif np.abs(acc_this - FLAGS.accuracy_threshold) < FLAGS.accuracy_delta:
-                    print('accuracy satisfied for %s is %.3g..stop training' % (
+                    logging.info('accuracy satisfied for %s is %.3g..stop training' % (
                             FLAGS.stop_standard, acc_this))
                     saver.save(sess=sess, save_path=model_path)
                     break
                 elif loss_this < FLAGS.loss_threshold:
-                    print('loss satisfied for %s is %.3g..stop training' % (
+                    logging.info('loss satisfied for %s is %.3g..stop training' % (
                             FLAGS.stop_standard, loss_this))
                     saver.save(sess=sess, save_path=model_path)
                     break
@@ -246,13 +251,13 @@ def main(_): # _ means the last param
         test_accuracy = model.accuracy.eval(feed_dict=model.get_feed(test_batch,False))
         adatest_accuracy = model.accuracy.eval(feed_dict=model.get_feed(adatest_batch,False))
         
-    print('From %d test accuracy for train domain is %.3g' % (high_index,test_accuracy))
-    print('test accuracy for adaptive domain is %.3g' % adatest_accuracy)
+    logging.info('From %d test accuracy for train domain is %.3g' % (high_index,test_accuracy))
+    logging.info('test accuracy for adaptive domain is %.3g' % adatest_accuracy)
 
     with tf.gfile.GFile(output_dir+'curvelist.pkl', 'wb') as f:
         pickle.dump(curve_list, f)
-    print('model is saved to:'+model_path)
-    print('max valid accuracy is %.3g' % max(curve_list[1]))
+    logging.info('model is saved to:'+model_path)
+    logging.info('max valid accuracy is %.3g' % max(curve_list[1]))
 
 #%%
 if __name__ == '__main__':
