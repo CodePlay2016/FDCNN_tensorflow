@@ -7,42 +7,53 @@ import tensorflow as tf
 import networks.tf_utils as tu
 
 def first_block(inpt, num_features,kernel_size,is_training,dropout_rate=0.8):
-    a, b = tf.constant(dropout_rate,dtype=tf.float32), tf.constant(1.0,dtype=tf.float32)
-    dropout_rate = tf.cond(is_training, lambda: a, lambda: b)
-    out = tf.layers.conv1d(inpt,num_features,kernel_size,padding='SAME')
-    out = tf.layers.batch_normalization(out, training=is_training)
-    out1 = tf.nn.relu(out)
+    with tf.name_scope('first_block'):
+        a, b = tf.constant(dropout_rate,dtype=tf.float32), tf.constant(1.0,dtype=tf.float32)
+        dropout_rate = tf.cond(is_training, lambda: a, lambda: b)
+        out = tf.layers.conv1d(inpt,num_features,kernel_size,padding='SAME')
+        out = tf.layers.batch_normalization(out, training=is_training)
+        out1 = tf.nn.relu(out)
 
-    out = tf.layers.conv1d(out1,num_features,kernel_size,padding='SAME')
-    out = tf.layers.batch_normalization(out, training=is_training)
-    out = tf.nn.relu(out)
-    out = tf.layers.dropout(out,rate=dropout_rate)
-    out = tf.layers.conv1d(out,num_features,kernel_size,strides=2,padding='SAME')
+        out = tf.layers.conv1d(out1,num_features,kernel_size,padding='SAME')
+        out = tf.layers.batch_normalization(out, training=is_training)
+        out = tf.nn.relu(out)
+        out = tf.layers.dropout(out,rate=dropout_rate)
+        out = tf.layers.conv1d(out,num_features,kernel_size,strides=2,padding='SAME')
 
-    out1 = tf.layers.max_pooling1d(out1,kernel_size,2,'SAME')
-    out = out + out1
+        out1 = tf.layers.max_pooling1d(out1,kernel_size,2,'SAME')
+        out = out + out1
     return out
 
-def build_block(inpt, num_features, kernel_size, down_sample, is_training, dropout_rate=0.5):
-    a, b = tf.constant(dropout_rate,dtype=tf.float32), tf.constant(1.0,dtype=tf.float32)
-    dropout_rate = tf.cond(is_training, lambda: a, lambda: b)
-    pre_num_features = inpt.get_shape().as_list()[-1]
-    stride = 2 if down_sample else 1
+def build_block(inpt, num_features, kernel_size, down_sample, is_training, name, dropout_rate=0.5):
+    with tf.name_scope('buildblock'+name):
+        feature_shape = inpt.get_shape().as_list()
+        if feature_shape[1] == 1:
+            down_sample = False
+        if feature_shape[1] < kernel_size:
+            kernel_size = feature_shape[1]
+        
+        a, b = tf.constant(dropout_rate,dtype=tf.float32), tf.constant(1.0,dtype=tf.float32)
+        dropout_rate = tf.cond(is_training, lambda: a, lambda: b)
+        pre_num_features = inpt.get_shape().as_list()[-1]
+        stride = 2 if down_sample else 1
 
-    out = tf.layers.batch_normalization(inpt, training=is_training)
-    out = tf.nn.relu(out)
-    out = tf.layers.dropout(out,dropout_rate)
-    out = tf.layers.conv1d(out,num_features,1,padding='SAME')
-    out = tf.layers.batch_normalization(out, training=is_training)
-    out = tf.nn.relu(out)
-    out = tf.layers.dropout(out,dropout_rate)
-    out = tf.layers.conv1d(out,num_features,kernel_size,strides=stride,padding='SAME')
 
-    # shortcut
-    inpt = tf.layers.max_pooling1d(inpt,kernel_size,stride,'SAME')
-    if not num_features == pre_num_features:
-        inpt = tf.layers.conv1d(inpt,num_features,1)
-    out = out + inpt
+        with tf.name_scope('main_branch'):
+            out = tf.layers.batch_normalization(inpt, training=is_training)
+            out = tf.nn.relu(out)
+            out = tf.layers.dropout(out,dropout_rate)
+            out = tf.layers.conv1d(out,num_features,1,padding='SAME')
+            out = tf.layers.batch_normalization(out, training=is_training)
+            out = tf.nn.relu(out)
+            out = tf.layers.dropout(out,dropout_rate)
+            out = tf.layers.conv1d(out,num_features,kernel_size,strides=stride,padding='SAME')
+
+        with tf.name_scope('shortcut'):
+            # shortcut
+            inpt = tf.layers.max_pooling1d(inpt,kernel_size,stride,'SAME')
+            if not num_features == pre_num_features:
+                inpt = tf.layers.conv1d(inpt,num_features,1)
+        out = out + inpt
     return out
 
 def final_block(inpt,num_class, is_training):
@@ -59,7 +70,7 @@ def cardinet(inpt,_,is_training):
     kernel_size = 16
     num_build_blocks = 15
     feature_increase_each_n_block = 4
-    downsample_each_n_block = 2
+    downsample_each_n_block = 1
     
     inpt = tf.expand_dims(inpt,-1)
 
@@ -71,8 +82,8 @@ def cardinet(inpt,_,is_training):
         if ii % downsample_each_n_block == 0:
             downsample = True
         else: downsample = False
-        out = build_block(out, num_features, kernel_size, downsample, is_training, dropout_rate=0.8)
-    
+        out = build_block(out, num_features, kernel_size, downsample, is_training,
+                         name=str(ii),dropout_rate=0.8)
     out = final_block(out, 3, is_training)
 
     return out
