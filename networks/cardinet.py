@@ -32,14 +32,16 @@ def build_block(inpt, num_features, kernel_size, down_sample, is_training, dropo
     out = tf.layers.batch_normalization(inpt, training=is_training)
     out = tf.nn.relu(out)
     out = tf.layers.dropout(out,dropout_rate)
-    out = tf.layers.conv1d(out,num_features,kernel_size,padding='SAME')
+    out = tf.layers.conv1d(out,num_features,1,padding='SAME')
     out = tf.layers.batch_normalization(out, training=is_training)
     out = tf.nn.relu(out)
     out = tf.layers.dropout(out,dropout_rate)
     out = tf.layers.conv1d(out,num_features,kernel_size,strides=stride,padding='SAME')
+
+    # shortcut
+    inpt = tf.layers.max_pooling1d(inpt,kernel_size,stride,'SAME')
     if not num_features == pre_num_features:
         inpt = tf.layers.conv1d(inpt,num_features,1)
-    inpt = tf.layers.max_pooling1d(inpt,kernel_size,stride,'SAME')
     out = out + inpt
     return out
 
@@ -57,7 +59,7 @@ def cardinet(inpt,_,is_training):
     kernel_size = 16
     num_build_blocks = 15
     feature_increase_each_n_block = 4
-    downsample_each_n_block = 1
+    downsample_each_n_block = 2
     
     inpt = tf.expand_dims(inpt,-1)
 
