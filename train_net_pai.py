@@ -246,11 +246,16 @@ def main(_): # _ means the last param
         saver = tf.train.Saver()
         saver.restore(sess,model_path)    
         # save the trained model
-        test_batch, _ = testset.next_batch(min(testset.num_examples(),1000))
-        adatest_batch, _ = adatestset.next_batch(min(adatestset.num_examples(),1000))
-        test_accuracy = model.accuracy.eval(feed_dict=model.get_feed(test_batch,False))
-        adatest_accuracy = model.accuracy.eval(feed_dict=model.get_feed(adatest_batch,False))
-        
+        test_accuracy = 0
+        adatest_accuracy = 0
+        for ii in range(20):
+            test_batch, _ = testset.next_batch(min(testset.num_examples(),64))
+            adatest_batch, _ = adatestset.next_batch(min(adatestset.num_examples(),64))
+            ta = model.accuracy.eval(feed_dict=model.get_feed(test_batch,False))
+            ata = model.accuracy.eval(feed_dict=model.get_feed(adatest_batch,False))
+            test_accuracy = ((test_accuracy * (ii)) + ta) / (ii+1)
+            adatest_accuracy = ((adatest_accuracy * (ii)) + ta) / (ii+1)
+
     logging.info('From %d test accuracy for train domain is %.3g' % (high_index,test_accuracy))
     logging.info('test accuracy for adaptive domain is %.3g' % adatest_accuracy)
 
