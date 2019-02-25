@@ -7,9 +7,11 @@ Created on Tue Apr 10 23:26:01 2018
 """
 import networks.cnn_model as cnn_model
 import networks.svm_model as svm_model
+import networks.GAN_model as gan_model
 
 model_map = {'cnn':cnn_model.cnn_model,
-             'svm':svm_model.svm_model
+             'svm':svm_model.svm_model,
+             'gan':gan_model.GAN_Model
                 }
 
 def get_model(modelname):
