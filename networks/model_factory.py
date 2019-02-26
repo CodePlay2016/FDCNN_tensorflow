@@ -10,8 +10,7 @@ import networks.svm_model as svm_model
 
 model_map = {'cnn':cnn_model.cnn_model,
              'svm':svm_model.svm_model,
-             'gan':gan_model.GAN_Model
-                }
+            }
 
 def get_model(modelname):
     return model_map[modelname]
