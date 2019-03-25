@@ -36,8 +36,7 @@ def _prepare_data(filepath,step, data_length, fft, mirror,channel=3, normalize=F
     
     if fft:
         matdata = np.transpose(matdata)
-        matdata = np.abs(np.fft.fft(matdata))[1:matdata.shape[0]//2+1, :]
-        print('do fft')
+        matdata = np.abs(np.fft.fft(matdata))[1:matdata.shape[0]//2+1, :]*2/data_length
         matdata = np.transpose(matdata)
     
     num_of_data, data_length = matdata.shape
