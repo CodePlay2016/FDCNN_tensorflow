@@ -134,7 +134,7 @@ def main(_): # _ means the last param
                                          vt_split=FLAGS.vt_split,
                                          divide_step=FLAGS.divide_step,
                                          data_length = FLAGS.input_size,
-                                         fft = False,
+                                         fft=FLAGS.do_fft,
                                          normalize=False,
                                          verbose=False, use_speed=FLAGS.use_speed)
     # adatestset.join_data(adatestset2)
