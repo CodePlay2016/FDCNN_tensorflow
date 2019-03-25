@@ -36,7 +36,7 @@ def _prepare_data(filepath,step, data_length, fft, mirror,channel=3, normalize=F
     
     if fft:
         matdata = np.transpose(matdata)
-        matdata = np.abs(np.fft.fft(matdata))[0:matdata.shape[0]//2, :]
+        matdata = np.abs(np.fft.fft(matdata))[1:matdata.shape[0]//2+1, :]
         print('do fft')
         matdata = np.transpose(matdata)
     
