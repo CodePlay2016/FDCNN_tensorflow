@@ -91,6 +91,7 @@ def get_dataset(filepath, targetpath=None, samp_freq='12k',
 #        if not param_record_flag:
 #            params['']
         #for train set
+        print(filename)
         dataset = ImgDataSet(use_speed=use_speed)
         train_endpoint = int(num_of_data * train_split)
         dataset.images = matdata[:train_endpoint,:]
