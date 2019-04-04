@@ -35,7 +35,7 @@ def _prepare_data(filepath,step, data_length, fft, mirror,channel=3, normalize=F
     matdata = np.array(matdata)
     
     if fft:
-        matdata = np.abs(np.fft.fft(matdata))[:, 1:matdata.shape[0]//2+1]*2/data_length
+        matdata = np.abs(np.fft.fft(matdata))[:, 1:data_length//2+1]*2/data_length
     
     num_of_data, data_length = matdata.shape
     if normalize:
@@ -60,8 +60,8 @@ def get_dataset(filepath, targetpath=None, samp_freq='12k',
                 train_split=0.95,
                 vt_split=0.5,
                 divide_step=2,
-                data_length = 4096,
-                fft = False,
+                data_length=4096,
+                fft=False,
                 mirror=False,
                 normalize=False,
                 verbose=False,
