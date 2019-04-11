@@ -1,2 +1,2 @@
 1. save adavalid accuracy each epoch
-2. run cvgg19
+2. run cardinet
