@@ -193,12 +193,12 @@ def main(_): # _ means the last param
             #     high_perform = acc_this
             #     high_index   = i
             #     saver.save(sess=sess, save_path=model_path)
-
+            adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
+                                                        feed_dict=adavalid_feed)
+            curve_list[3].append(adatest_accuracy)
             if i and i % 100 == 0: # and show
                 train_accuracy, train_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=train_eval_feed)
-                adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
-                                                            feed_dict=adavalid_feed)
                 loss_this,acc_this = sess.run([model.cross_entropy_loss,model.accuracy],feed_dict=loss_feed)
                 valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
                 
@@ -219,7 +219,7 @@ def main(_): # _ means the last param
                 curve_list[0].append(train_accuracy)
                 curve_list[1].append(valid_accuracy)
                 curve_list[2].append(high_perform)
-                curve_list[3].append(adatest_accuracy)
+                
             if i and i % 1000 == 0:
                 saver.save(sess=sess, save_path=model_path)
                 logging.info('model regularly saved...')
