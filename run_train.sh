@@ -1,6 +1,6 @@
 python train_net_pai.py --checkpointDir=/home/ad/code/FDCNN_tensorflow/checkpoint/cardinet/ \
 --buckets=/home1/data/TestDataFromWen/arranged/steady_condition/pkl/ \
---input_size=4096 \
+--input_size=8192 \
 --train_split=0.8 \
 --train_speed_list=40,30,20,10 \
 --test_speed_list=50 \
