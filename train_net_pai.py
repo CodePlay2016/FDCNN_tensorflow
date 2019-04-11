@@ -143,7 +143,7 @@ def main(_): # _ means the last param
     
     
     # preparing the working directory, summaries
-    output_dir = FLAGS.checkpointDir + time_info + '/'
+    output_dir = os.path.join(FLAGS.checkpointDir, FLAGS.network, time_info) + '/'
     model_path = os.path.join(output_dir, 'model.ckpt')
     summary_path = os.path.join(output_dir, 'summary/')
     for end_point, x in model.end_points.items():
@@ -193,15 +193,18 @@ def main(_): # _ means the last param
             #     high_perform = acc_this
             #     high_index   = i
             #     saver.save(sess=sess, save_path=model_path)
-            adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
-                                                        feed_dict=adavalid_feed)
-            curve_list[3].append(adatest_accuracy)
+            if i > 10000:
+                adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
+                                                            feed_dict=adavalid_feed)
+                curve_list[3].append(adatest_accuracy)
             if i and i % 100 == 0: # and show
                 train_accuracy, train_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=train_eval_feed)
                 loss_this,acc_this = sess.run([model.cross_entropy_loss,model.accuracy],feed_dict=loss_feed)
                 valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
                 
+                adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
+                                                            feed_dict=adavalid_feed)
                 train_summary = sess.run(merged_summary, feed_dict=train_eval_feed)
                 valid_summary = sess.run(merged_summary, feed_dict=valid_feed)
                 train_summary_writer.add_summary(train_summary, i)

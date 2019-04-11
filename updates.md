@@ -1,2 +1,1 @@
-1. save adavalid accuracy each epoch
-2. run cardinet
+1. cardinet: change build block drop out rate to 1.
