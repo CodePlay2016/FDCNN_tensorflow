@@ -91,6 +91,7 @@ FLAGS = tf.app.flags.FLAGS
 def main(_): # _ means the last param
     time_info = time.strftime('%Y-%m-%d_%H%M%S',time.localtime(time.time()))
     os.mkdir('./log/'+time_info)
+    os.system('cp ./run_train* '+'./log/'+time_info)
     log_path   = os.path.join('./log/'+time_info, 'train.log')
     logging.basicConfig(filename=log_path,filemode='a',format='%(asctime)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S', level=logging.DEBUG)
@@ -144,7 +145,8 @@ def main(_): # _ means the last param
     
     # preparing the working directory, summaries
     output_dir = os.path.join(FLAGS.checkpointDir, FLAGS.network, time_info) + '/'
-    model_path = os.path.join(output_dir, 'model.ckpt')
+    model_path_regular = os.path.join(output_dir, 'model.ckpt')
+    model_path_final = os.path.join(output_dir, 'final_model.ckpt')
     summary_path = os.path.join(output_dir, 'summary/')
     for end_point, x in model.end_points.items():
         tf.summary.histogram('activations/' + end_point, x)
@@ -189,14 +191,16 @@ def main(_): # _ means the last param
             #     acc_this = acc_this*0.2 + valid_accuracy * 0.8 
             # update the highest performance checkpoint
 
-            # if valid_accuracy - 0.98 >= 0.005 and acc_this > high_perform:
-            #     high_perform = acc_this
-            #     high_index   = i
-            #     saver.save(sess=sess, save_path=model_path)
-            if i > 10000:
+            if i > -1:
                 adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=adavalid_feed)
+                valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
+                curve_list[1].append(valid_accuracy)
                 curve_list[3].append(adatest_accuracy)
+            if valid_accuracy - 0.98 >= 0.005 and adatest_accuracy > high_perform:
+                high_perform = adatest_accuracy
+                high_index   = i
+                saver.save(sess=sess, save_path=model_path_final)
             if i and i % 100 == 0: # and show
                 train_accuracy, train_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=train_eval_feed)
@@ -220,11 +224,10 @@ def main(_): # _ means the last param
                 logging.info(msg)
         
                 curve_list[0].append(train_accuracy)
-                curve_list[1].append(valid_accuracy)
                 curve_list[2].append(high_perform)
                 
             if i and i % 1000 == 0:
-                saver.save(sess=sess, save_path=model_path)
+                saver.save(sess=sess, save_path=model_path_regular)
                 logging.info('model regularly saved...')
                 with tf.gfile.GFile(output_dir+'curvelist.pkl', 'wb') as f:
                     pickle.dump(curve_list, f)
@@ -237,19 +240,22 @@ def main(_): # _ means the last param
                 elif np.abs(acc_this - FLAGS.accuracy_threshold) < FLAGS.accuracy_delta:
                     logging.info('accuracy satisfied for %s is %.3g..stop training' % (
                             FLAGS.stop_standard, acc_this))
-                    saver.save(sess=sess, save_path=model_path)
+                    saver.save(sess=sess, save_path=model_path_final)
                     break
                 elif loss_this < FLAGS.loss_threshold:
                     logging.info('loss satisfied for %s is %.3g..stop training' % (
                             FLAGS.stop_standard, loss_this))
-                    saver.save(sess=sess, save_path=model_path)
+                    saver.save(sess=sess, save_path=model_path_final)
                     break
             else:
                 model.train_step.run(feed_dict=train_train_feed)
         
     with tf.Session() as sess:
         saver = tf.train.Saver()
-        saver.restore(sess,model_path)    
+        if os.path.exists(model_path_final):
+            saver.restore(sess,model_path_final)
+        else:
+            saver.restore(sess,model_path_regular)
         # save the trained model
         test_accuracy = 0
         adatest_accuracy = 0

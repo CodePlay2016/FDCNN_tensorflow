@@ -1,1 +1,2 @@
-1. cardinet: change build block drop out rate to 1.
+1. cardinet: debug it so that it can work perfect now
+2. add some autorun script
