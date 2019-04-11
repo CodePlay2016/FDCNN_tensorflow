@@ -68,7 +68,7 @@ def final_block(inpt,num_class, is_training):
 def cardinet(inpt,_,is_training):
     num_features = 64
     kernel_size = 16
-    num_build_blocks = 13
+    num_build_blocks = 15
     feature_increase_each_n_block = 4
     downsample_each_n_block = 1
     
@@ -83,7 +83,7 @@ def cardinet(inpt,_,is_training):
             downsample = True
         else: downsample = False
         out = build_block(out, num_features, kernel_size, downsample, is_training,
-                         name=str(ii),dropout_rate=1)
+                         name=str(ii),dropout_rate=0.8)
     out = final_block(out, 3, is_training)
 
     return out
