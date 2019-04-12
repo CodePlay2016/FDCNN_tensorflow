@@ -231,7 +231,7 @@ def main(_): # _ means the last param
             
             if valid_accuracy - 0.98 >= 0.005 and adatest_accuracy >= high_perform:
                 high_perform = adatest_accuracy
-                if i - high_index > 100 # in case of too much duplicated savings
+                if i - high_index > 100: # in case of too much duplicated savings
                     high_index   = i
                     saver.save(sess=sess, save_path=model_path_final)
             if FLAGS.early_stop and\
