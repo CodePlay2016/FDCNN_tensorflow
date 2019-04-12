@@ -229,10 +229,10 @@ def main(_): # _ means the last param
                 with tf.gfile.GFile(output_dir+'curvelist.pkl', 'wb') as f:
                     pickle.dump(curve_list, f)
             
-            if valid_accuracy - 0.98 >= 0.005 and adatest_accuracy >= high_perform:
+            if adatest_accuracy >= high_perform:
                 high_perform = adatest_accuracy
                 if i - high_index > 100: # in case of too much duplicated savings
-                    high_index   = i
+                    high_index = i
                     saver.save(sess=sess, save_path=model_path_final)
             if FLAGS.early_stop and\
             valid_accuracy - 0.98 >= 0.005:
@@ -256,8 +256,10 @@ def main(_): # _ means the last param
         saver = tf.train.Saver()
         if os.path.exists(model_path_final):
             saver.restore(sess,model_path_final)
+            logging.info('restoring from the best model')
         else:
             saver.restore(sess,model_path_regular)
+            logging.info('restoring from the regular model')
         # save the trained model
         test_accuracy = 0
         adatest_accuracy = 0
