@@ -191,24 +191,19 @@ def main(_): # _ means the last param
             #     acc_this = acc_this*0.2 + valid_accuracy * 0.8 
             # update the highest performance checkpoint
 
-            if i < -1:
+            if i > -1:
                 adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=adavalid_feed)
                 valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
                 curve_list[1].append(valid_accuracy)
                 curve_list[3].append(adatest_accuracy)
+                curve_list[2].append(i)
 
             if i % 100 == 0: # and show
                 train_accuracy, train_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=train_eval_feed)
                 loss_this,acc_this = sess.run([model.cross_entropy_loss,model.accuracy],feed_dict=loss_feed)
                 valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
-                
-                adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
-                                                            feed_dict=adavalid_feed)
-                valid_accuracy = model.accuracy.eval(feed_dict=valid_feed)
-                curve_list[1].append(valid_accuracy)
-                curve_list[3].append(adatest_accuracy)
                 
                 adatest_accuracy, adatest_speed_loss = sess.run([model.accuracy, model.speed_loss],
                                                             feed_dict=adavalid_feed)
@@ -227,7 +222,6 @@ def main(_): # _ means the last param
                 logging.info(msg)
         
                 curve_list[0].append(train_accuracy)
-                curve_list[2].append(high_perform)
                 
             if i and i % 1000 == 0:
                 saver.save(sess=sess, save_path=model_path_regular)
@@ -237,8 +231,9 @@ def main(_): # _ means the last param
             
             if valid_accuracy - 0.98 >= 0.005 and adatest_accuracy >= high_perform:
                 high_perform = adatest_accuracy
-                high_index   = i
-                saver.save(sess=sess, save_path=model_path_final)
+                if i - high_index > 100 # in case of too much duplicated savings
+                    high_index   = i
+                    saver.save(sess=sess, save_path=model_path_final)
             if FLAGS.early_stop and\
             valid_accuracy - 0.98 >= 0.005:
                 if (np.abs(acc_this - FLAGS.accuracy_threshold) >= FLAGS.accuracy_delta and
