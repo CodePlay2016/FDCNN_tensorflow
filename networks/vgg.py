@@ -9,7 +9,7 @@ def cvgg19(inpt, inpt_size, is_training):
         x_image = tf.reshape(inpt, [-1, inpt_size,1, 1])
 
     ## first conv-----------------------------
-    num_feature = 16
+    num_feature = 64
     out = tu.add_conv1d_layer(x_image, num_feature, 9, 2, BN=False, 
                             layer_name='conv1')
     end_points['conv1']=out
@@ -24,7 +24,7 @@ def cvgg19(inpt, inpt_size, is_training):
         
     ## second conv-----------------------------
     num_feature = num_feature*2
-    out = tu.add_conv1d_layer(out, num_feature, 9, BN=False, 
+    out = tu.add_conv1d_layer(out, num_feature, 9, BN=True, 
                             layer_name='conv3')
     end_points['conv3']=out
     
