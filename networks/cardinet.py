@@ -74,7 +74,7 @@ def cardinet(inpt,_,is_training):
     
     inpt = tf.expand_dims(inpt,-1)
 
-    out = first_block(inpt, num_features, 16, is_training, dropout_rate=0.8)
+    out = first_block(inpt, num_features, 16, is_training, dropout_rate=0.5)
 
     for ii in range(num_build_blocks):
         if ii % feature_increase_each_n_block == 0:
@@ -83,7 +83,7 @@ def cardinet(inpt,_,is_training):
             downsample = True
         else: downsample = False
         out = build_block(out, num_features, kernel_size, downsample, is_training,
-                         name=str(ii),dropout_rate=0.8)
+                         name=str(ii),dropout_rate=0.5)
     out = final_block(out, 3, is_training)
 
     return out
