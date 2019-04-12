@@ -1,2 +1,1 @@
-1. cardinet: debug it so that it can work perfect now
-2. add some autorun script
+1. run evaluation each 100 epoch to train all conditions
