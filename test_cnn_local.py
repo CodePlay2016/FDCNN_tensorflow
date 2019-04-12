@@ -20,20 +20,17 @@ import time, os
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.python import pywrap_tensorflow
+# from tensorflow.python import pywrap_tensorflow
 from sklearn.manifold import TSNE
 from data import data_factory
 from networks import model_factory
 
 #####-----------structure parameters-----------------
-INPUT_SIZE = 8192//4
+INPUT_SIZE = 8192
 
 ####-----------------------------------------------------------------------
-os.chdir('/media/codeplay2018/545A30205A2FFD74/code/lab/python/FDCNN_tensorflow/')
-cwd = os.getcwd()
-data_dir = '/media/codeplay2018/545A30205A2FFD74/code/lab/data/TestDataFromWen/'\
-            'arranged/steady_condition/pkl/' # ubuntu
-model_path = os.path.join(cwd, 'checkpoint/cvgg19/2018-06-07_230020/model.ckpt')
+data_dir = '/home1/data/TestDataFromWen/arranged/steady_condition/pkl/' # server
+model_path = './checkpoint/cardinet/2019-04-12_210425/final_model.ckpt'
 ####-----------------------------------------------------------------------
 # reader = pywrap_tensorflow.NewCheckpointReader(model_path)
 # var_to_shape_map = reader.get_variable_to_shape_map()
@@ -48,11 +45,11 @@ model_path = os.path.join(cwd, 'checkpoint/cvgg19/2018-06-07_230020/model.ckpt')
 def main(): # _ means the last param
     # Create the model
     Model = model_factory.get_model('cnn')
-    model = Model('cvgg19_3', INPUT_SIZE,3)
+    model = Model('cardinet', INPUT_SIZE,3)
     
     ### load data
     test_speed = [50]
-    batch_size = 1000
+    batch_size = 100
     data_fn = data_factory.get_data_from('wen')
     testset,_, _ = data_fn(data_dir,
                             samp_freq='12k',

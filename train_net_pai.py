@@ -148,10 +148,10 @@ def main(_): # _ means the last param
     model_path_regular = os.path.join(output_dir, 'model.ckpt')
     model_path_final = os.path.join(output_dir, 'final_model.ckpt')
     summary_path = os.path.join(output_dir, 'summary/')
-    for end_point, x in model.end_points.items():
-        tf.summary.histogram('activations/' + end_point, x)
-        tf.summary.scalar('sparsity/' + end_point,
-                                        tf.nn.zero_fraction(x))
+    # for end_point, x in model.end_points.items():
+    #     tf.summary.histogram('activations/' + end_point, x)
+    #     tf.summary.scalar('sparsity/' + end_point,
+    #                                     tf.nn.zero_fraction(x))
     merged_summary = tf.summary.merge_all()
     
 
@@ -254,7 +254,7 @@ def main(_): # _ means the last param
         
     with tf.Session() as sess:
         saver = tf.train.Saver()
-        if os.path.exists(model_path_final):
+        if os.path.exists(model_path_final+'.meta'):
             saver.restore(sess,model_path_final)
             logging.info('restoring from the best model')
         else:

@@ -43,7 +43,7 @@ class cnn_model():
     def _define_loss(self):
         
         with tf.name_scope('fault-loss'):
-            cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=self.class_label,
+            cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=self.class_label,
                                                                 logits=self.end_points['class_end'])
             self.cross_entropy_loss = tf.reduce_mean(cross_entropy)
             tf.summary.scalar('loss-cross_entropy', self.cross_entropy_loss)
